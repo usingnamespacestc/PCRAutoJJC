@@ -23,7 +23,13 @@ def findTemplateFromSource(image, Target, value, widthPix):
     #使用灰度图像中的坐标对原始RGB图像进行标记
     for pt in zip(*loc[::-1]):
         cv2.rectangle(img_rgb, pt, (pt[0] + widthPix, pt[1] + widthPix), (7,249,151), 2)
-        location.append({'x': pt[0] + 0.5 * widthPix, 'y': pt[1] + 0.5 * widthPix})
+        flag_exist = False
+        for iloc in location: #进行去重操作，如果找到的这个位置没有被添加到了location中过才添加
+            if (pt[0] + 0.5 * widthPix > iloc['x'] - 10 and pt[0] + 0.5 * widthPix < iloc['x'] + 10) \
+                and (pt[1] + 0.5 * widthPix > iloc['y'] - 10 and pt[1] + 0.5 * widthPix < iloc['y'] + 10):
+                flag_exist = True
+        if flag_exist == False:
+            location.append({'x': pt[0] + 0.5 * widthPix, 'y': pt[1] + 0.5 * widthPix})
     #查看三组图像(图像标签名称，文件名称)
     #cv2.imshow('Detected', img_rgb)
     #cv2.imshow('gray', img_gray)
